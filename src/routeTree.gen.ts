@@ -11,9 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as WorkersImport } from './routes/workers'
+import { Route as PostImport } from './routes/post'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const WorkersRoute = WorkersImport.update({
+  id: '/workers',
+  path: '/workers',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostRoute = PostImport.update({
+  id: '/post',
+  path: '/post',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +46,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/post': {
+      id: '/post'
+      path: '/post'
+      fullPath: '/post'
+      preLoaderRoute: typeof PostImport
+      parentRoute: typeof rootRoute
+    }
+    '/workers': {
+      id: '/workers'
+      path: '/workers'
+      fullPath: '/workers'
+      preLoaderRoute: typeof WorkersImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +67,42 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
+  '/workers': typeof WorkersRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
+  '/workers': typeof WorkersRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
+  '/workers': typeof WorkersRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/post' | '/workers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/post' | '/workers'
+  id: '__root__' | '/' | '/post' | '/workers'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PostRoute: typeof PostRoute
+  WorkersRoute: typeof WorkersRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PostRoute: PostRoute,
+  WorkersRoute: WorkersRoute,
 }
 
 export const routeTree = rootRoute
@@ -79,11 +117,19 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/post",
+        "/workers"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/post": {
+      "filePath": "post.tsx"
+    },
+    "/workers": {
+      "filePath": "workers.tsx"
     }
   }
 }
